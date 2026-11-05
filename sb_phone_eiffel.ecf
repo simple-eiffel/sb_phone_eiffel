@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-23-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-23-0 http://www.eiffel.com/developers/xml/configuration-1-23-0.xsd" name="sb_phone_eiffel" uuid="380CB712-70A1-4336-B97D-D14E1CD4CF9B" library_target="sb_phone_eiffel">
+	<description>SB Phone rebuilt in Eiffel, one to one with the Kotlin app in sb_phone.</description>
+	<target name="sb_phone_eiffel">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\..*$</exclude>
+		</file_rule>
+		<option warning="warning">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			<warning name="obsolete_feature" value="all"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="feature"/>
+		<capability>
+			<concurrency support="scoop" use="thread"/>
+			<void_safety support="all"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="simple_encoding" location="$SIMPLE_EIFFEL/simple_encoding/simple_encoding.ecf"/>
+		<library name="simple_sql" location="$SIMPLE_EIFFEL/simple_sql/simple_sql.ecf"/>
+		<cluster name="fold" location=".\src\fold\" recursive="true"/>
+		<cluster name="data" location=".\src\data\" recursive="true"/>
+	</target>
+	<target name="sb_phone_eiffel_tests" extends="sb_phone_eiffel">
+		<root class="TEST_APP" feature="make"/>
+		<setting name="total_order_on_reals" value="true"/>
+		<external_object location="$SIMPLE_EIFFEL/sb_phone_eiffel/testing/pc_sqlite/sqlite3_fts4.obj"/>
+		<external_linker_flag value="-FORCE:MULTIPLE -IGNORE:4006,4088"/>
+		<library name="simple_testing" location="$SIMPLE_EIFFEL/simple_testing/simple_testing.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="tests" location=".\testing\" recursive="true">
+			<file_rule>
+				<exclude>/diff$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="sb_fold_diff" extends="sb_phone_eiffel">
+		<description>The differential checker: reads the same inputs as testing/diff/KotlinOracle.java.</description>
+		<root class="SB_FOLD_DIFF_APP" feature="make"/>
+		<cluster name="diff" location=".\testing\diff\"/>
+		<cluster name="cases" location=".\testing\cases\"/>
+	</target>
+	<target name="sb_data_diff" extends="sb_phone_eiffel">
+		<description>The data differential: reads the same cases as testing/diff/DataOracle.java.</description>
+		<root class="SB_DATA_DIFF_APP" feature="make"/>
+		<external_object location="$SIMPLE_EIFFEL/sb_phone_eiffel/testing/pc_sqlite/sqlite3_fts4.obj"/>
+		<external_linker_flag value="-FORCE:MULTIPLE -IGNORE:4006,4088"/>
+		<cluster name="diff" location=".\testing\diff\"/>
+		<cluster name="cases" location=".\testing\cases\"/>
+	</target>
+	<target name="sb_phone_app" extends="sb_phone_eiffel">
+		<description>The app itself, built for Android by eifphone.</description>
+		<root class="SB_APP" feature="make"/>
+		<library name="simple_eif_phone" location="$SIMPLE_EIFFEL\simple_eif_phone\simple_eif_phone.ecf"/>
+		<cluster name="app" location=".\src\app\" recursive="true"/>
+	</target>
+	<target name="sb_phone_release">
+		<description>The app as it ships: the same classes with contracts off, which searches need.</description>
+		<root class="SB_APP" feature="make"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\..*$</exclude>
+		</file_rule>
+		<option warning="warning">
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false" supplier_precondition="false"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="feature"/>
+		<capability>
+			<concurrency support="scoop" use="thread"/>
+			<void_safety support="all"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"><option><assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false" supplier_precondition="false"/></option></library>
+		<library name="simple_encoding" location="$SIMPLE_EIFFEL/simple_encoding/simple_encoding.ecf"><option><assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false" supplier_precondition="false"/></option></library>
+		<library name="simple_sql" location="$SIMPLE_EIFFEL/simple_sql/simple_sql.ecf"><option><assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false" supplier_precondition="false"/></option></library>
+		<library name="simple_eif_phone" location="$SIMPLE_EIFFEL\simple_eif_phone\simple_eif_phone.ecf"><option><assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false" supplier_precondition="false"/></option></library>
+		<cluster name="fold" location=".\src\fold\" recursive="true"/>
+		<cluster name="data" location=".\src\data\" recursive="true"/>
+		<cluster name="app" location=".\src\app\" recursive="true"/>
+	</target>
+</system>
